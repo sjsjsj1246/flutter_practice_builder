@@ -2,38 +2,39 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreenStream extends StatefulWidget {
+  const HomeScreenStream({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreenStream> createState() => _HomeScreenStreamState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenStreamState extends State<HomeScreenStream> {
   @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(fontSize: 16.0);
 
     return Scaffold(
-        body: FutureBuilder(
-            future: getNumber(),
-            builder: (context, snapshot) {
+        body: StreamBuilder<int>(
+            stream: streamNumbers(),
+            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
               if (snapshot.hasData) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Stack(
                     children: [
                       if (snapshot.connectionState ==
                           ConnectionState.waiting) ...[
-                        SizedBox(width: 10.0),
-                        CircularProgressIndicator()
+                        Positioned(
+                            top: 10.0,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(child: CircularProgressIndicator()))
                       ],
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text("futureBuilder",
+                          Text("streamBuilder",
                               style: textStyle.copyWith(
                                   fontWeight: FontWeight.w700, fontSize: 20.0)),
                           Text("ConState : ${snapshot.connectionState}",
@@ -70,5 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final random = Random();
 
     return random.nextInt(100);
+  }
+
+  Stream<int> streamNumbers() async* {
+    for (int i = 0; i < 4; i++) {
+      await Future.delayed(const Duration(seconds: 1));
+
+      yield i;
+    }
   }
 }

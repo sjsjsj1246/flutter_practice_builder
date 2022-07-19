@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_practice_builder/screens/homeScreen.dart';
+import 'package:flutter_practice_builder/screens/homeScreenFuture.dart';
+import 'package:flutter_practice_builder/screens/homeScreenStream.dart';
 
 void main() {
   runApp(const MaterialApp(
-    home: HomeScreen(),
+    home: SafeArea(child: HomeScreenStream()),
   ));
 }
